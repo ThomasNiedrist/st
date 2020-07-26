@@ -1,0 +1,40 @@
+From aecdff3915abe3e8b41275ea7f13f3ac6c54eb4a Mon Sep 17 00:00:00 2001
+From: Jacob Prosser <jacoblouisprosser@protonmail.com>
+Date: Thu, 25 Apr 2019 12:55:32 +1000
+Subject: [PATCH] Scrollback w/ mouse
+
+---
+ config.def.h |   2 +
+ st.c         | 115 ++++++++++++++++++++++++++++++++++++++++-----------
+ st.h         |   2 +
+ 3 files changed, 95 insertions(+), 24 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index 0e01717..7326a74 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -176,6 +176,8 @@ static Shortcut shortcuts[] = {
+ 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
+ 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
+ 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
++	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
++	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
+ 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
+ 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+ };
+diff --git a/st.h b/st.h
+index 38c61c4..17a79e0 100644
+--- a/st.h
++++ b/st.h
+@@ -80,6 +80,8 @@ void die(const char *, ...);
+ void redraw(void);
+ void draw(void);
+ 
++void kscrolldown(const Arg *);
++void kscrollup(const Arg *);
+ void printscreen(const Arg *);
+ void printsel(const Arg *);
+ void sendbreak(const Arg *);
+-- 
+2.21.0
+

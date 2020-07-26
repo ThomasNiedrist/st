@@ -700,7 +700,7 @@ execsh(char *cmd, char **args)
 		arg = NULL;
 	}
 	DEFAULT(args, ((char *[]) {prog, arg, NULL}));
-
+	
 	unsetenv("COLUMNS");
 	unsetenv("LINES");
 	unsetenv("TERMCAP");

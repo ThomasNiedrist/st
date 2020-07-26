@@ -1903,6 +1903,12 @@ resize(XEvent *e)
 void
 run(void)
 {
+
+		
+		FILE *fp;
+		fp = fopen("/home/thomas/st.log","a");
+		fprintf(fp,"run termname: %s\n",termname);
+		fclose(fp);
 	XEvent ev;
 	int w = win.w, h = win.h;
 	fd_set rfd;
@@ -2007,9 +2013,6 @@ int
 resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
 {
 
-		FILE *fp;
-		fp = fopen("/home/thomas/st.log","a");
-		fprintf(fp,"%s",name);
 	char **sdst = dst;
 	int *idst = dst;
 	float *fdst = dst;
@@ -2026,30 +2029,24 @@ resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
 	fullname[sizeof(fullname) - 1] = fullclass[sizeof(fullclass) - 1] = '\0';
 
 	XrmGetResource(db, fullname, fullclass, &type, &ret);
-
 		
-	if (ret.addr == NULL || strncmp("String", type, 64)){
-		fclose(fp);
-			return 1;}
+	if (ret.addr == NULL || strncmp("String", type, 64))
+			return 1;
 
 	switch (rtype) {
 	case STRING:
 		*sdst = ret.addr;
-			fprintf(fp,"%s\n",*(sdst));
 		break;
 	case INTEGER:
 
 		*idst = strtoul(ret.addr, NULL, 10);
-			fprintf(fp,"%d\n",*(idst));
 		break;
 	case FLOAT:
 
 		*fdst = strtof(ret.addr, NULL);
-			fprintf(fp,"%f\n",*(fdst));
 		break;
 	}
 	
-		fclose(fp);
 	return 0;
 }
 
@@ -2062,12 +2059,15 @@ config_init(void)
 
 	XrmInitialize();
 	resm = XResourceManagerString(xw.dpy);
+
 	if (!resm)
 		return;
 
 	db = XrmGetStringDatabase(resm);
-	for (p = resources; p < resources + LEN(resources); p++)
+	for (p = resources; p < resources + LEN(resources); p++){
+			
 		resource_load(db, p->name, p->type, p->dst);
+	}
 }
 
 void
@@ -2082,14 +2082,14 @@ usage(void)
 	    "          [-T title] [-t title] [-w windowid] -l line"
 	    " [stty_args ...]\n", argv0, argv0);
 }
-
 int
 main(int argc, char *argv[])
 {
+
+
 	xw.l = xw.t = 0;
 	xw.isfixed = False;
 	xsetcursor(cursorshape);
-
 	ARGBEGIN {
 	case 'a':
 		allowaltscreen = 0;
@@ -2146,6 +2146,7 @@ run:
 
 	setlocale(LC_CTYPE, "");
 	XSetLocaleModifiers("");
+
 
 	if(!(xw.dpy = XOpenDisplay(NULL)))
 		die("Can't open display\n");

@@ -213,9 +213,9 @@ ResourcePref resources[] = {
 //		{ "blinktimeout", INTEGER, &blinktimeout },
 //		{ "bellvolume",   INTEGER, &bellvolume },
 //		{ "tabspaces",    INTEGER, &tabspaces },
-//		{ "borderpx",     INTEGER, &borderpx },
-//		{ "cwscale",      FLOAT,   &cwscale },
-//		{ "chscale",      FLOAT,   &chscale },
+		{ "borderpx",     INTEGER, &borderpx },
+		{ "cwscale",      FLOAT,   &cwscale },
+		{ "chscale",      FLOAT,   &chscale },
 		{ "alpha",		  FLOAT,   &alpha},
 };
 

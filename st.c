@@ -1137,7 +1137,7 @@ tscrollup(int orig, int n, int copyhist)
 	LIMIT(n, 0, term.bot-orig+1);
 
 	if (copyhist){
-			term.histi = (term.histi - 1 + HISTSIZE) % HISTSIZE;
+			term.histi = (term.histi + 1) % HISTSIZE;
 			temp = term.hist[term.histi];
 			term.hist[term.histi] = term.line[orig];
 			term.line[orig] = temp;
@@ -1164,17 +1164,26 @@ selscroll(int orig, int n)
 	if (sel.ob.x == -1)
 		return;
 
-	if (BETWEEN(sel.nb.y, orig, term.bot) != BETWEEN(sel.ne.y, orig, term.bot)) {
-		selclear();
-	} else if (BETWEEN(sel.nb.y, orig, term.bot)) {
-		sel.ob.y += n;
-		sel.oe.y += n;
-		if (sel.ob.y < term.top || sel.ob.y > term.bot ||
-		    sel.oe.y < term.top || sel.oe.y > term.bot) {
+	if (BETWEEN(sel.ob.y, orig, term.bot) == BETWEEN(sel.oe.y, orig, term.bot)) {
 			selclear();
-		} else {
+			return;
+	} 
+	if(sel.type == SEL_RECTANGULAR){
+			if(sel.ob.y < term.top)
+					sel.ob.y = term.top;
+			if(sel.oe.y > term.bot)
+					sel.oe.y = term.bot;
+	}
+	else {
+			if(sel.ob.y < term.top){
+					sel.ob.y = term.top;
+					sel.ob.x = 0;
+			}
+			if(sel.oe.y> term.bot){
+					sel.oe.y = term.bot;
+					sel.oe.x = term.col;
+			}
 			selnormalize();
-		}
 	}
 }
 
